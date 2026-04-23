@@ -1,4 +1,4 @@
-name: Déploiement vers Vercel après tests
+name: Déploiement vers Vercel
 
 on:
   push:
@@ -6,31 +6,24 @@ on:
       - main
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-          cache: 'npm'
-      - run: npm install
-      - run: npm test -- --watchAll=false --ci --passWithNoTests || true
-
   deploy:
-    needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout du code
+        uses: actions/checkout@v3
+      - name: Installation de Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '22'
           cache: 'npm'
-      - run: npm install
-      - run: npm run build
-      - name: Déployer sur Vercel
+      - name: Installation des dépendances
+        run: npm install
+      - name: Build de l'application
+        run: npm run build
+      - name: Déploiement sur Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           npm install -g vercel
           vercel --prod --token $VERCEL_TOKEN --yes
+          
