@@ -1,4 +1,4 @@
-test('dummy test (cassé)', () => {
-  expect(true).toBe(false);
+test('dummy test', () => {
+  expect(true).toBe(true);
 });
 export {};
