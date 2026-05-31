@@ -1,10 +1,8 @@
 name: Déploiement vers Vercel après exécution des tests
-
 on:
   push:
     branches:
       - main
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -19,7 +17,6 @@ jobs:
         run: npm install
       - name: Run tests
         run: npm test
-
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -41,3 +38,14 @@ jobs:
         run: |
           npm install -g vercel
           vercel --prod --token $VERCEL_TOKEN --yes
+  sonarcloud:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v8.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
